@@ -16,14 +16,17 @@ Basic photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG
 2. Run pipeline ```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs --type incremental --geomodel f --oopenmvs```
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
-You should end up with something like this ![Example 1](https://i.imgur.com/CpSs2SE.jpg)
+You should end up with something like this (press ctrl/cmd-k to disable backface culling) ![Example 1](https://i.imgur.com/CpSs2SE.jpg)
 
 ### Dense Mesh Reconstruction with Textures by using Incremental Structure from Motion
 1. Download example [image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
 2. Run pipeline ```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
 3. Open your model for example using meshlab. The model is named "scene_dense_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm_dense/mvs directory
 
+The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
+
 ## Pipeline Options
+
     General Options:
 
         --help
