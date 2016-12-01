@@ -7,24 +7,24 @@ RUN apt -y update && \
     git clone -b develop --recursive https://github.com/openMVG/openMVG.git && \
     mkdir openmvg_build; cd openmvg_build && \
     cmake -DCMAKE_BUILD_TYPE=RELEASE . ../openMVG/src -DCMAKE_INSTALL_PREFIX=/opt/openmvg && \
-    make -j4 && make install && \
+    make -j2 && make install && \
     cd .. && \
     main_path=`pwd` && \
     hg clone https://bitbucket.org/eigen/eigen#3.2 && \
     mkdir eigen_build && cd eigen_build && \
     cmake . ../eigen && \
-    make -j4 && make install && \
+    make -j2 && make install && \
     cd .. && \
     git clone https://github.com/cdcseacave/VCG.git vcglib && \
     git clone https://ceres-solver.googlesource.com/ceres-solver ceres-solver && \
     mkdir ceres_build && cd ceres_build && \
     cmake . ../ceres-solver/ -DMINIGLOG=ON -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
-    make -j4 && make install && \
+    make -j2 && make install && \
     cd .. && \
     git clone https://github.com/cdcseacave/openMVS.git openMVS && \
     mkdir openMVS_build && cd openMVS_build && \
     cmake . ../openMVS -DCMAKE_BUILD_TYPE=Release -DVCG_DIR="$main_path/vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs && \
-    make -j4 && make install && \
+    make -j2 && make install && \
     git clone https://github.com/rennu/dpg.git /opt/pipeline
 WORKDIR /
 RUN rm -rf /tmp/build
