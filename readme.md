@@ -1,30 +1,42 @@
-# OpenMVG + OpenMVS pipeline in docker
+# OpenMVG + OpenMVS Pipeline in Docker
 
-Basic photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and [OpenMVS](https://github.com/cdcseacave/openMVS).
+Basic photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG), [OpenMVS](https://github.com/cdcseacave/openMVS) and [Docker](http://www.docker.com/).
 
 ## Installation
 1. Install docker
-2. By default (at least on macos) the maximum amount of RAM given to a container is limited to 2GB. Go to preferences and set it as high as you dare. Press apply & restart.
-3. Go to your datasets directory ie. ~/datasets
-4. Get docker image and view command line options```docker run --rm -ti spedenaave/dpg --help```
-5. Run the actual pipeline ```docker run --rm -v `pwd`:/datasets [pipeline options]``` (see examples below)
+2. Get docker image and view help ```docker run --rm -ti spedenaave/dpg:latest --help```
+3. On macos and windows: Open up docker settings and tweak the amount of resources it is allowed to use. The default settings are too low...
+
+## Running the pipeline
+On macos / linux:
+```docker run --rm -v `pwd`:/datasets spedenaave/dpg [pipeline arguments]```
+* `--rm` removes the container after the reconstruct has finished.
+* ```-v `pwd`:/datasets ``` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
+
+Windows:
+```docker run --rm -v `pwd`:/datasets spedenaave/dpg [pipeline arguments]```
+* `--rm` removes the container after the reconstruct has finished.
+* `-v "%cd%":/datasets` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
+* **Note: With files and directories use forward slashes (/) instead of slashes (\\)**
+
+**Note**: 
 
 ## Examples
 
 ### Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download example image set [image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
-2. Run pipeline 
+1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
+2. Run pipeline:
 
-Osx / linux: ```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs --type incremental --geomodel f --oopenmvs```
+macos / linux: ```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/sfm --type incremental --geomodel f --oopenmvs```
 
-Windows: ```docker run --rm -v "%cd%":/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs --type incremental --geomodel f --oopenmvs```
+Windows: ```docker run --rm -v "%cd%":/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/sfm --type incremental --geomodel f --oopenmvs```
 
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
 You should end up with something like this (press ctrl/cmd-k to disable backface culling) ![Example 1](https://i.imgur.com/CpSs2SE.jpg)
 
 ### Dense Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download example image set [image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
+1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
 2. Run pipeline
 macos / linux : ```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
 Windows: ```docker run --rm -v "%cd%":/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
