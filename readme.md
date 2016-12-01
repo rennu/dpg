@@ -141,21 +141,25 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
         OpenMVS
 
-            --densify
-                Do DensifyPointCloud
+            DensifyPointCloud
 
-            --dnviews
-                Number of views used for depth-map estimation
-                0 all neighbor views available
-                Default: 4
-            
-            --dnfviews
-                Minimum number of images that agrees with an estimate during fusion in order to consider it
-                inliner
-                Default: 3
-            
-            --tfactor
-                ReconstructMesh Thickness Factor
+                --densify
+                    Enable dense reconstruction
+                    Default: Off
 
-            --cudarefine
-                Use CUDA version of RefineMesh
+                --dnviews
+                    Number of views used for depth-map estimation
+                    0 all neighbor views available
+                    Default: 4
+            
+                --dnfviews
+                    Minimum number of images that agrees with an estimate during fusion in order to consider it
+                    inliner
+                    Default: 3
+            
+            ReconstructMesh
+
+                --tfactor
+                    ReconstructMesh Thickness Factor
+                    Default: 2
+
