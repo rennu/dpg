@@ -25,7 +25,7 @@ RUN apt -y update && \
     mkdir openMVS_build && cd openMVS_build && \
     cmake . ../openMVS -DCMAKE_BUILD_TYPE=Release -DVCG_DIR="$main_path/vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs && \
     make -j4 && make install && \
-    git clone git@bitbucket.org:renfld/dpg.git /opt/pipeline
+    git clone https://github.com/rennu/dpg.git /opt/pipeline
 WORKDIR /
 RUN rm -rf /tmp/build
 ENTRYPOINT ["/usr/bin/python", "/opt/pipeline/pipeline.py"]
