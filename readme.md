@@ -44,9 +44,13 @@ You should end up with something like this (press ctrl/cmd-k to disable backface
 ### Dense Mesh Reconstruction with Textures by using Incremental Structure from Motion
 1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
 2. Run pipeline
+
 macos / linux: 
+
 ```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
+
 Windows:
+
 ```docker run --rm -v "%cd%":/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
 3. Open your model for example using meshlab. The model is named "scene_dense_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm_dense/mvs directory
 
