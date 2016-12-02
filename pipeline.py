@@ -131,7 +131,6 @@ def main():
             imageListingOptions += ['-g', '0']
 
         # Compute Features
-
         if getOpt.findKey("--descmethod"):
             computeFeaturesOptions += ['-m', getOpt.optValue.upper()]
 
@@ -223,17 +222,6 @@ def main():
             print "Incorrect pipeline type -> Exit"
             sys.exit()
 
-# Deemed unnecessary, however, only comment these for now...
-#
-#        commands.append([
-#            "Colorize Structure",
-#            [os.path.join(openmvgBinaries, "openMVG_main_ComputeSfM_DataColor"),  "-i", os.path.join(reconstructionDirectory, "sfm_data.bin"), "-o", os.path.join(reconstructionDirectory,"colorized.ply")] + dataColorOptions
-#        ])
-#        commands.append([
-#            "Structure from known poses (robust triangulation)",
-#            [os.path.join(openmvgBinaries, "openMVG_main_ComputeStructureFromKnownPoses"),  "-i", os.path.join(reconstructionDirectory, "sfm_data.bin"), "-m", matchesDirectory, "-f", os.path.join(matchesDirectory, "matches.f.bin"), "-o", os.path.join(reconstructionDirectory,"robust.bin")] +  structureFromPosesOptions
-#        ])
-
         # What to do after openmvg has finished?
         if getOpt.findKey("--omeshlab"):
 
@@ -297,6 +285,10 @@ def main():
                 print "Executing: " + ' '.join(instruction[1])
                 sp = subprocess.Popen( instruction[1] )
                 sp.wait()
+                sp.communicate()
+                if sp.returncode != 0:
+                    print "Process did not exit correctly (return code != 0). Giving up :("
+                    sys.exit(1)
 
         # Output pipeline total completion time
         endTime = int(time.time())
