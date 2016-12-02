@@ -285,10 +285,6 @@ def main():
                 print "Executing: " + ' '.join(instruction[1])
                 sp = subprocess.Popen( instruction[1] )
                 sp.wait()
-                sp.communicate()
-                if sp.returncode != 0:
-                    print "Process did not exit correctly (return code != 0). Giving up :("
-                    sys.exit(1)
 
         # Output pipeline total completion time
         endTime = int(time.time())
