@@ -181,10 +181,21 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 Minimum number of images that agrees with an estimate during fusion in order to consider it
                 inliner
                 Default: 3
+
+            --drlevel
+                How many times to scale down the images before point cloud computation. For better accuracy/speed width
+                high resolution images use 2 or even 3
+                Default: 1
         
         ReconstructMesh
 
-            --tfactor
+            --rtfactor
                 ReconstructMesh Thickness Factor
+                Default: 2
+            
+            --rmpdistance
+                Minimum distance in pixels between the projection of two 3D points to consider them different while
+                triangulating (0 to disable). Use to reduce amount of memory used with penalty of probably losing
+                detail
                 Default: 2
 
