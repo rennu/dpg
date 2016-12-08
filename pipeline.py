@@ -32,9 +32,11 @@ def main():
         'descmethod=',
         'densify',
         'cudarefine',
-        'tfactor=',
+        'rtfactor=',
         'dnfviews=',
-        'dnviews'
+        'dnviews',
+        'drlevel=',
+        'rmpdistance='
     ])
 
     getOpt = optFinder(optList)
@@ -168,9 +170,15 @@ def main():
         if getOpt.findKey("--dnviews"):
             densifyPointCloudOptions += ['--number-views', getOpt.optValue]
 
+        if getOpt.findKey("--drlevel"):
+            densifyPointCloudOptions += ['--resolution-level', getOpt.optValue]
+
         # ReconstructMesh
-        if getOpt.findKey("--tfactor"):
+        if getOpt.findKey("--rtfactor"):
             reconstructMeshOptions += ['--thickness-factor', getOpt.optValue]
+
+        if getOpt.findKey("--rmpdistance"):
+            reconstructMeshOptions += ['--min-point-distance', getOpt.optValue]
 
         if debug == False:
             # Create the ouput/matches folder if not present
@@ -304,143 +312,7 @@ def main():
 
 def printHelp():
     print """
-
-    Usage: pipeline.py --type [incremental|global] --openmvg [directory] --openmvs [directory] [options] [input directory] [output directory]
-
-    General Options:
-
-        --help
-            Print this text
-
-        --debug
-            Print commands and exit
-
-        --input [directory]
-            Image input directory
-
-        --output [directory]
-            Output directory
-
-        --type [string]
-            Select SfM mode from Global SfM or Incremental SfM. Possible values:
-            incremental
-            global
-        
-        --oopenmvs
-            Export project to OpenMVS
-        
-        --omeshlab
-            Export project to Meshlab
-
-    Optional settings:
-
-        --openmvg [directory]
-            Location of OpenMVG binaries
-            default: /path/to/script/../bin/openmvg
-        
-        --openmvs [directory]
-            Location of OpenMVS binaries
-            default: /path/to/script/../bin/openmvs
-
-        --meshlab [directory]
-            Location of Meshlab binaries
-            default: /path/to/script/../bin/meshlab
-
-        --recompute
-            Recompute everything
-
-        Image Listing:
-
-            --cgroup
-                Each view have it's own camera intrinsic parameters
-
-            --flength [float]
-                If your camera is not listed in the camera sensor database, you can set pixel focal length here.
-                The value can be calculated by max(width-pixels, height-pixels) * focal length(mm) / Sensor width
-
-            --cmodel [int]
-                Camera model:
-                1: Pinhole
-                2: Pinhole Radial 1
-                3: Pinhole Radial 3 (default)
-
-        Compute Features:
-
-            --descmethod [string]
-                Method to describe an image:
-                    SIFT (default)
-                    AKAZE_FLOAT
-                    AKAZE_MLDB
-
-            --dpreset [string]
-                Used to control the Image_describer configuration
-                    NORMAL
-                    HIGH
-                    ULTRA
-
-        Compute Matches:
-
-            --ratio [float]
-                Nearest Neighbor distance ratio (smaller is more restrictive => Less false positives)
-                Default: 0.8
-
-            --geomodel [char]
-                Compute Matches geometric model:
-                f: Fundamental matrix filtering (default)
-                    For Incremental SfM
-                e: Essential matrix filtering
-                    For Global SfM
-                h: Homography matrix filtering
-                    For datasets that have same point of projection
-        
-            --nmatching [string]
-                Compute Matches Nearest Matching Method:
-                BRUTEFORCEL2: BruteForce L2 matching for Scalar based regions descriptor,
-                ANNL2: Approximate Nearest Neighbor L2 matching for Scalar based regions descriptor,
-                CASCADEHASHINGL2: L2 Cascade Hashing matching,
-                FASTCASCADEHASHINGL2: (default)
-                    * L2 Cascade Hashing with precomputed hashed regions, (faster than CASCADEHASHINGL2 but use more memory).
-
-        Incremental SfM
-            --icmodel [int]
-                The camera model type that will be used for views with unknown intrinsic
-                1: Pinhole
-                2: Pinhole radial 1
-                3: Pinhole radial 3 (default)
-                4: Pinhole radial 3 + tangential 2
-                5: Pinhole fisheye
-
-        Global SfM
-            --grotavg [int]
-                1: L1 rotation averaging [Chatterjee]
-                2: L2 rotation averaging [Martinec] (default)
-
-            --gtransavg [int]
-                1: L1 translation averaging [GlobalACSfM]
-                2: L2 translation averaging [Kyle2014]
-                3: SoftL1 minimization [GlobalACSfM] (default)
-
-
-        OpenMVS
-            --densify
-                Do DensifyPointCloud
-
-            --dnviews
-                Number of views used for depth-map estimation
-                0 all neighbor views available
-                Default: 4
-            
-            --dnfviews
-                Minimum number of images that agrees with an estimate during fusion in order to consider it
-                inliner
-                Default: 3
-            
-            --tfactor
-                ReconstructMesh Thickness Factor
-
-            --cudarefine
-                Use CUDA version of RefineMesh
-
+    For instructions see https://github.com/rennu/dpg/blob/master/readme.md
     """
 
 
