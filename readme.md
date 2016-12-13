@@ -104,6 +104,8 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 1: Pinhole
                 2: Pinhole Radial 1
                 3: Pinhole Radial 3 (default)
+                4: Pinhole brown
+                5: Pinhole with a simple Fish-eye distortion
 
         Compute Features:
 
@@ -195,7 +197,6 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             
             --rmpdistance
                 Minimum distance in pixels between the projection of two 3D points to consider them different while
-                triangulating (0 to disable). Use to reduce amount of memory used with penalty of probably losing
-                detail
+                triangulating (0 to disable). Use to reduce amount of memory used with a penalty of lost detail
                 Default: 2
 
