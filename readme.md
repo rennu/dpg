@@ -168,6 +168,9 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
     OpenMVS
 
+        --output-obj
+            Make OpenMVS output obj instead of ply (default)
+
         DensifyPointCloud
 
             --densify
