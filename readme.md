@@ -21,8 +21,6 @@ Windows:
 * `-v "%cd%":/datasets` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
 * **Note: With files and directories use forward slashes (/) instead of slashes (\\)**
 
-**Note**: 
-
 ## Examples
 
 ### Mesh Reconstruction with Textures by using Incremental Structure from Motion
@@ -202,4 +200,9 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 Minimum distance in pixels between the projection of two 3D points to consider them different while
                 triangulating (0 to disable). Use to reduce amount of memory used with a penalty of lost detail
                 Default: 2
+        
+        RefineMesh
+            --rscales
+                Number of RefineMesh iterations
+                Default: 3
 

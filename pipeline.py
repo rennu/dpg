@@ -38,7 +38,8 @@ def main():
         'dnviews',
         'drlevel=',
         'rmpdistance=',
-        'output-obj'
+        'output-obj',
+        'rscales='
     ])
 
     getOpt = optFinder(optList)
@@ -190,6 +191,9 @@ def main():
         # Refine Mesh
         if getOpt.findKey("--output-obj"):
             refineMeshOptions += ['--export-type', 'obj']
+
+        if getOpt.findKey("--rscales"):
+            refineMeshOptions += ['--scales', getOpt.optValue]
 
         # Texture Mesh
         if getOpt.findKey("--output-obj"):
