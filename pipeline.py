@@ -40,7 +40,8 @@ def main():
         'drlevel=',
         'rmpdistance=',
         'output-obj',
-        'rscales='
+        'rscales=',
+        'opmvs'
     ])
 
     getOpt = optFinder(optList)
@@ -239,7 +240,7 @@ def main():
 
         # What to do after openmvg has finished?
 
-        if getOpt.findKey("--oopmvs"):
+        if getOpt.findKey("--opmvs"):
 
             commands.append([
                 "Convert OpenMVG project to PMVS",
