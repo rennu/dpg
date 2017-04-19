@@ -1,6 +1,9 @@
 #!/usr/bin/python
 
-import getopt, sys, re, os, subprocess, time, math
+import sys, re, os, subprocess, time, math
+
+# Yes, we're still at python 2.6. Deal with it.
+import getopt
 
 def main():
 
@@ -12,7 +15,6 @@ def main():
         'type=',
         'openmvg=',
         'openmvs=',
-        'meshlab=',
         'cgroup',
         'flength=',
         'ratio=',
@@ -25,7 +27,6 @@ def main():
         'dpreset=',
         'recompute',
         'upright',
-        'omeshlab',
         'oopenmvs',
         'grotavg=',
         'gtransavg=',
@@ -77,45 +78,35 @@ def main():
 
         # Set directories
 
-        # Detect docker
+#            matchesDirectory = os.path.join(outputDirectory, "matches")
+#            reconstructionDirectory = os.path.join(outputDirectory, "reconstruction_global")
+        matchesDirectory = os.path.join(outputDirectory, "omvg")
+        reconstructionDirectory = os.path.join(outputDirectory, "omvg")
+        MVSDirectory = os.path.join(outputDirectory, "omvs")
 
+        # Generic linux paths
         scriptLocation = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         if os.path.exists("/opt/openmvg/share/openMVG"):
 
-            outputDirectory = os.path.join("/datasets", outputDirectory)
-            inputDirectory = os.path.join("/datasets", inputDirectory)
-
             camera_file_params = "/opt/openmvg/share/openMVG/sensor_width_camera_database.txt"
 
-            matchesDirectory = os.path.join(outputDirectory, "matches")
-            reconstructionDirectory = os.path.join(outputDirectory, "reconstruction_global")
-            MVSDirectory = os.path.join(outputDirectory, "mvs")
-            meshlabDirectory = os.path.join(outputDirectory, "meshlab")
             # Binary locations:
-
             openmvgBinaries = "/opt/openmvg/bin"
             openmvsBinaries = "/opt/openmvs/bin/OpenMVS"
-            meshlabBinaries = os.path.join(scriptLocation, "bin", "meshlab")
+            cmvsBinaries = "/opt/cmvs/bin"
 
         else:
             CAMERA_SENSOR_WIDTH_DIRECTORY = os.path.join(scriptLocation, "sensor_database")
             camera_file_params = os.path.join(CAMERA_SENSOR_WIDTH_DIRECTORY, "sensor_width_camera_database.txt")
-            matchesDirectory = os.path.join(outputDirectory, "matches")
-            reconstructionDirectory = os.path.join(outputDirectory, "reconstruction_global")
-            MVSDirectory = os.path.join(outputDirectory, "mvs")
-            meshlabDirectory = os.path.join(outputDirectory, "meshlab")
             # Binary locations:
-            openmvgBinaries = os.path.join(scriptLocation, "bin", "openmvg-develop")
+            openmvgBinaries = os.path.join(scriptLocation, "bin", "openmvg-20170328")
             openmvsBinaries = os.path.join(scriptLocation, "bin", "openmvs")
-            meshlabBinaries = os.path.join(scriptLocation, "bin", "meshlab")
-
+            cmvsBinaries = os.path.join(scriptLocation, "bin", "cmvs", "bin")
 
         if getOpt.findKey("--openmvg"):
             openmvgBinaries = getOpt.optValue
         if getOpt.findKey("--openmvs"):
             openmvsBinaries = getOpt.optValue
-        if getOpt.findKey("--meshlab"):
-            meshlabBinaries = getOpt.optValue
 
         # Debug
         debug = False
@@ -209,10 +200,6 @@ def main():
             if not os.path.exists(reconstructionDirectory):
                 os.mkdir(reconstructionDirectory)
 
-            if getOpt.findKey("--omeshlab"):
-                if not os.path.exists(meshlabDirectory):
-                    os.mkdir(meshlabDirectory)
-
             if getOpt.findKey("--oopenmvs"):
                 if not os.path.exists(MVSDirectory):
                     os.mkdir(MVSDirectory)
@@ -251,12 +238,29 @@ def main():
             sys.exit()
 
         # What to do after openmvg has finished?
-        if getOpt.findKey("--omeshlab"):
+
+        if getOpt.findKey("--oopmvs"):
 
             commands.append([
-                "Convert OpenMVG project to Meshlab",
-                [os.path.join(openmvgBinaries, "openMVG_main_openMVG2MESHLAB"), "-i", os.path.join(reconstructionDirectory, "sfm_data.bin"), "-p", reconstructionDirectory, "-o", meshlabDirectory]
+                "Convert OpenMVG project to PMVS",
+                [os.path.join(openmvgBinaries, "openMVG_main_openMVG2PMVS"), "-i", os.path.join(reconstructionDirectory, "sfm_data.bin"), "-o", outputDirectory]
             ])
+
+            if os.name == "posix":
+                commands.append([
+                    "Run PMVS using default settings",
+                    [os.path.join(cmvsBinaries, "pmvs2"), os.path.join(outputDirectory, "PMVS/"), "pmvs_options.txt"]
+                ])
+
+            else:
+
+                commands.append([
+                    "Run PMVS using default settings",
+                    [os.path.join(cmvsBinaries, "pmvs2"), os.path.join(outputDirectory, "PMVS\\"), "pmvs_options.txt"]
+                ])
+
+            # ....but how the hell do you convert pmvs/cmvs to openmvs?
+
 
         if getOpt.findKey("--oopenmvs"):
 
