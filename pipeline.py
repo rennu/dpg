@@ -81,8 +81,8 @@ def main():
 
 #            matchesDirectory = os.path.join(outputDirectory, "matches")
 #            reconstructionDirectory = os.path.join(outputDirectory, "reconstruction_global")
-        matchesDirectory = os.path.join(outputDirectory, "omvg")
-        reconstructionDirectory = os.path.join(outputDirectory, "omvg")
+        matchesDirectory = os.path.join(outputDirectory, "matches")
+        reconstructionDirectory = os.path.join(outputDirectory, "reconstruction_global")
         MVSDirectory = os.path.join(outputDirectory, "omvs")
 
         # Generic linux paths
