@@ -243,7 +243,7 @@ def main():
 
         if getOpt.findKey("--colorize"):
             commands.append([
-                "Colorize sparce point cloud", 
+                "Colorize sparse point cloud", 
                 [os.path.join(openmvgBinaries, "openMVG_main_ComputeSfM_DataColor"), "-i", os.path.join(reconstructionDirectory, "sfm_data.bin"), "-o", os.path.join(reconstructionDirectory, "colorized.ply") ]
             ])
 
