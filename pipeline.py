@@ -283,7 +283,7 @@ def main():
             if getOpt.findKey("--densify") or getOpt.findKey("--densifyonly"):
                 commands.append([
                     "Densify point cloud",
-                    [os.path.join(openmvsBinaries, "DensifyPointCloud"), "scene.mvs", "-w", MVSDirectory, "-v", "3"] + densifyPointCloudOptions
+                    [os.path.join(openmvsBinaries, "DensifyPointCloud"), "scene.mvs", "-w", MVSDirectory, "-v", "0"] + densifyPointCloudOptions
                 ])
                 sceneFileName.append("dense")
 
@@ -292,7 +292,7 @@ def main():
                 mvsFileName = '_'.join(sceneFileName) + ".mvs"
                 commands.append([
                     "Reconstruct mesh",
-                    [os.path.join(openmvsBinaries, "ReconstructMesh"), mvsFileName, "-w", MVSDirectory, "-v", "3"] + reconstructMeshOptions
+                    [os.path.join(openmvsBinaries, "ReconstructMesh"), mvsFileName, "-w", MVSDirectory, "-v", "0"] + reconstructMeshOptions
                 ])
                 sceneFileName.append("mesh")
 
@@ -301,12 +301,12 @@ def main():
                 if getOpt.findKey("--cudarefine"):
                     commands.append([
                         "Refine mesh using CUDA",
-                        [os.path.join(openmvsBinaries, "RefineMeshCUDA"), mvsFileName, "-w", MVSDirectory, "-v", "3"] + refineMeshOptions
+                        [os.path.join(openmvsBinaries, "RefineMeshCUDA"), mvsFileName, "-w", MVSDirectory, "-v", "0"] + refineMeshOptions
                     ])
                 else:
                     commands.append([
                         "Refine mesh",
-                        [os.path.join(openmvsBinaries, "RefineMesh"), mvsFileName, "-w", MVSDirectory, "-v", "3"] + refineMeshOptions
+                        [os.path.join(openmvsBinaries, "RefineMesh"), mvsFileName, "-w", MVSDirectory, "-v", "0"] + refineMeshOptions
                     ])
                 sceneFileName.append("refine")
 
@@ -314,7 +314,7 @@ def main():
                 mvsFileName = '_'.join(sceneFileName) + ".mvs"
                 commands.append([
                     "Texture mesh",
-                    [os.path.join(openmvsBinaries, "TextureMesh"), mvsFileName, "-w", MVSDirectory, "-v", "3", "--empty-color", "0"] + textureMeshOptions
+                    [os.path.join(openmvsBinaries, "TextureMesh"), mvsFileName, "-w", MVSDirectory, "-v", "0", "--empty-color", "0"] + textureMeshOptions
                 ])
         
         for instruction in commands:
