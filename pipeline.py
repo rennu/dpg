@@ -41,7 +41,8 @@ def main():
         'rmpdistance=',
         'output-obj',
         'rscales=',
-        'opmvs'
+        'opmvs',
+        'colorize'
     ])
 
     getOpt = optFinder(optList)
@@ -239,6 +240,12 @@ def main():
             sys.exit()
 
         # What to do after openmvg has finished?
+
+        if getOpt.findKey("--colorize"):
+            commands.append([
+                "Colorize sparce point cloud", 
+                [os.path.join(openmvgBinaries, "openMVG_main_ComputeSfM_DataColor"), "-i", os.path.join(reconstructionDirectory, "sfm_data.bin"), "-o", os.path.join(reconstructionDirectory, "colorized.ply") ]
+            ])
 
         if getOpt.findKey("--opmvs"):
 
