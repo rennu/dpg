@@ -23,8 +23,8 @@ make -j2 && make install
 git clone https://github.com/cdcseacave/openMVS.git /tmp/build/openmvs 
 cd /tmp/build/openmvs
 #git reset --hard 5ed0d9e3c1ff5f73c945660676d1e2956803915b
-mkdir /tmp/build/openmvs_build && cd /tmp/build/openmvs_build_debug
-cmake . ../openmvs -DCMAKE_BUILD_TYPE=Debug -DVCG_DIR="/tmp/build/vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs 
+mkdir /tmp/build/openmvs_build && cd /tmp/build/openmvs_build
+cmake . ../openmvs -DCMAKE_BUILD_TYPE=Release -DVCG_DIR="/tmp/build/vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs 
 make -j2 && make install 
 git clone https://github.com/pmoulon/CMVS-PMVS /tmp/build/cmvs-pmvs
 mkdir /tmp/build/cmvs-pmvs_build && cd /tmp/build/cmvs-pmvs_build
