@@ -205,4 +205,8 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             --rscales
                 Number of RefineMesh iterations
                 Default: 3
+            --rlevel
+                Times to scale down the images before mesh refinement
+                Default: 0
+
 
