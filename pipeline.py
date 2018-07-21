@@ -191,7 +191,7 @@ def main():
         
         if getOpt.findKey("--rlevel"):
             refineMeshOptions += ['--resolution-level', getOpt.optValue]
-
+        
         # Texture Mesh
         if getOpt.findKey("--output-obj"):
             textureMeshOptions += ['--export-type', 'obj']
