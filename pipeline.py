@@ -41,6 +41,7 @@ def main():
         'rmpdistance=',
         'output-obj',
         'rscales=',
+        'rlevel=',
         'opmvs',
         'colorize'
     ])
@@ -188,8 +189,8 @@ def main():
         if getOpt.findKey("--rscales"):
             refineMeshOptions += ['--scales', getOpt.optValue]
         
-        if getOpts.findKey("--rlevel"):
-            refineMeshOptions += ['----resolution-level', getOpt.optValue]
+        if getOpt.findKey("--rlevel"):
+            refineMeshOptions += ['--resolution-level', getOpt.optValue]
 
         # Texture Mesh
         if getOpt.findKey("--output-obj"):
