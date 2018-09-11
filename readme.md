@@ -1,56 +1,49 @@
 # OpenMVG + OpenMVS Pipeline in Docker
 
-Basic photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG), [OpenMVS](https://github.com/cdcseacave/openMVS) and [Docker](http://www.docker.com/).
+Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG), [OpenMVS](https://github.com/cdcseacave/openMVS) and [Docker](http://www.docker.com/).
 
 ## Installation
 1. Install docker
-2. Get docker image and view help ```docker run --rm spedenaave/dpg:latest --help```
-3. On macos and windows: Open up docker settings and tweak the amount of resources it is allowed to use. The default settings are too low...
+2. Clone repository
+3. Build the image e.g. ```docker build -t dpg .```
 
-## Running the pipeline
+## Running the image
+
+In this example we mount current directory to /datasets directory inside the container.
+
 On macos / linux:
 
-```docker run --rm -v `pwd`:/datasets spedenaave/dpg [pipeline arguments]```
+```docker run --rm -it -v $(pwd):/datasets dpg```
 * `--rm` removes the container after the reconstruct has finished.
+* `-it` starts the container in interactive mode
 * ```-v `pwd`:/datasets ``` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
 
 Windows:
 
-```docker run --rm -v `pwd`:/datasets spedenaave/dpg [pipeline arguments]```
+```docker run --rm -it -v "%cd%":/datasets dpg```
 * `--rm` removes the container after the reconstruct has finished.
+* `-it` starts the container in interactive mode
 * `-v "%cd%":/datasets` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
 * **Note: With files and directories use forward slashes (/) instead of slashes (\\)**
 
 ## Examples
 
 ### Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
+1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
 2. Run pipeline:
 
-macos / linux:
 
-```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/sfm --type incremental --geomodel f --oopenmvs```
-
-Windows:
-
-```docker run --rm -v "%cd%":/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/sfm --type incremental --geomodel f --oopenmvs```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --type incremental --geomodel f --oopenmvs```
 
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
 You should end up with something like this (press ctrl/cmd-k to disable backface culling) ![Example 1](https://i.imgur.com/CpSs2SE.jpg)
 
 ### Dense Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle) to ~/datasets directory and open it up in terminal.
-2. Run pipeline
+1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
+2. Run pipeline: 
 
-macos / linux: 
-
-```docker run --rm -v `pwd`:/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
-
-Windows:
-
-```docker run --rm -v "%cd%":/datasets spedenaave/dpg --input ImageDataset_SceauxCastle/images --output ImageDataset_SceauxCastle/mvs_dense --type incremental --geomodel f --oopenmvs --densify```
-3. Open your model for example using meshlab. The model is named "scene_dense_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm_dense/mvs directory
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --type incremental --geomodel f --oopenmvs --densify```
 
 The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
 
@@ -209,5 +202,4 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             --rlevel
                 Times to scale down the images before mesh refinement
                 Default: 0
-
 
