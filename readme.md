@@ -14,14 +14,14 @@ In this example we mount current directory to /datasets directory inside the con
 On macos / linux:
 
 ```docker run --rm -it -v $(pwd):/datasets dpg```
-* `--rm` removes the container after the reconstruct has finished.
+* `--rm` removes the container when you exit.
 * `-it` starts the container in interactive mode
 * ```-v `pwd`:/datasets ``` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
 
 Windows:
 
 ```docker run --rm -it -v "%cd%":/datasets dpg```
-* `--rm` removes the container after the reconstruct has finished.
+* `--rm` removes the container when you exit.
 * `-it` starts the container in interactive mode
 * `-v "%cd%":/datasets` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
 * **Note: With files and directories use forward slashes (/) instead of slashes (\\)**
