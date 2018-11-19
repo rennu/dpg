@@ -138,7 +138,7 @@ def createParser():
     openmvsTexture.add_argument('--txemptycolor',
         default=0,
         type=int,
-        help='Color of surfaces OpenMVS is unable to texture. Default: 0 (black)')
+        help='Color of surfaces OpenMVS TextureMesh is unable to texture. Default: 0 (black)')
     return parser
 
 def createCommands(args):
