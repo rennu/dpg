@@ -1,6 +1,3 @@
-# Use OpenMVG develop branch version 97d2957
-# Use OpenMVS master branch version 019e9d6 
-
 FROM ubuntu:16.04
 MAINTAINER Speden Aave <renfld@gmail.com>
 ARG UID=1000
@@ -14,5 +11,3 @@ RUN groupadd -g $GID ptools
 RUN useradd -r -u $UID -m -g ptools ptools
 WORKDIR /
 USER ptools
-# ENTRYPOINT ["/usr/bin/python", "-u", "/opt/pipeline/pipeline.py"]
-
