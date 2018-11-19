@@ -1,30 +1,13 @@
-# OpenMVG + OpenMVS Pipeline in Docker
+# OpenMVG + OpenMVS Pipeline
 
-Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG), [OpenMVS](https://github.com/cdcseacave/openMVS) and [Docker](http://www.docker.com/).
+Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and [OpenMVS](https://github.com/cdcseacave/openMVS).
 
 ## Installation
-1. Install docker
+1. Install Windows Subsystem for Linux (Ubuntu 18.04)
 2. Clone repository
-3. Build the image e.g. ```docker build -t dpg .```
+3. sudo ./install
 
-## Running the image
-
-In this example we mount current directory to /datasets directory inside the container.
-
-On macos / linux:
-
-```docker run --rm -it -v $(pwd):/datasets dpg```
-* `--rm` removes the container when you exit.
-* `-it` starts the container in interactive mode
-* ```-v `pwd`:/datasets ``` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
-
-Windows:
-
-```docker run --rm -it -v "%cd%":/datasets dpg```
-* `--rm` removes the container when you exit.
-* `-it` starts the container in interactive mode
-* `-v "%cd%":/datasets` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
-* **Note: With files and directories use forward slashes (/) instead of slashes (\\)**
+Or you could also build a image using supplied Dockerfile.
 
 ## Examples
 
