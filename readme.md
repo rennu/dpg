@@ -3,11 +3,19 @@
 Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and [OpenMVS](https://github.com/cdcseacave/openMVS).
 
 ## Installation
+Windows:
 1. Install Windows Subsystem for Linux (Ubuntu 18.04)
 2. Clone repository
-3. sudo ./install
+3. ```sudo ./install```
 
-Or you could also build a image using supplied Dockerfile.
+Linux (Ubuntu 18.04):
+1. Clone repository
+2. ```sudo ./install```
+
+Docker:
+1. Clone repository
+2. ```docker build -t dpg .```
+3. ```docker run -v $(pwd):/datasets --rm -it dpg```
 
 ## Examples
 
