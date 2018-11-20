@@ -2,6 +2,8 @@
 
 Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and [OpenMVS](https://github.com/cdcseacave/openMVS).
 
+(Also includes [CMVS](https://github.com/pmoulon/CMVS-PMVS) and [COLMAP](https://github.com/colmap/colmap)).
+
 ## Installation
 Windows:
 1. Install Windows Subsystem for Linux (Ubuntu 18.04)
