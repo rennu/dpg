@@ -367,7 +367,9 @@ def runCommands(commands):
         print('')
         rc = runCommand(map(str, instruction['command']))
         if rc != 0:
-            print('Process failed :(')
+            print('Failed while executing: ' )
+            print(' '.join(map(str, instruction['command'])))
+            sys.exit(1)
     endTime = int(time.time())
 
     timeDifference = endTime - startTime
