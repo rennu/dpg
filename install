@@ -26,6 +26,7 @@ apt-get install -y  \
   libboost-serialization-dev \
   libboost-system-dev \
   libboost-test-dev \
+  libboost-graph-dev \
   libcgal-dev \
   libcgal-qt5-dev \
   libeigen3-dev \
