@@ -1,30 +1,23 @@
-# OpenMVG + OpenMVS Pipeline in Docker
+# OpenMVG + OpenMVS Pipeline
 
-Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG), [OpenMVS](https://github.com/cdcseacave/openMVS) and [Docker](http://www.docker.com/).
+Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and [OpenMVS](https://github.com/cdcseacave/openMVS).
+
+(Also includes [CMVS](https://github.com/pmoulon/CMVS-PMVS) and [COLMAP](https://github.com/colmap/colmap)).
 
 ## Installation
-1. Install docker
-2. Clone repository
-3. Build the image e.g. ```docker build -t dpg .```
-
-## Running the image
-
-In this example we mount current directory to /datasets directory inside the container.
-
-On macos / linux:
-
-```docker run --rm -it -v $(pwd):/datasets dpg```
-* `--rm` removes the container when you exit.
-* `-it` starts the container in interactive mode
-* ```-v `pwd`:/datasets ``` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
-
 Windows:
+1. Install Windows Subsystem for Linux (Ubuntu 18.04)
+2. Clone repository
+3. ```sudo ./install```
 
-```docker run --rm -it -v "%cd%":/datasets dpg```
-* `--rm` removes the container when you exit.
-* `-it` starts the container in interactive mode
-* `-v "%cd%":/datasets` mounts current working directory to /datasets so that the script is able to access your hosts filesystem
-* **Note: With files and directories use forward slashes (/) instead of slashes (\\)**
+Linux (Ubuntu 18.04):
+1. Clone repository
+2. ```sudo ./install```
+
+Docker:
+1. Clone repository
+2. ```docker build -t dpg .```
+3. ```docker run -v $(pwd):/datasets --rm -it dpg```
 
 ## Examples
 
@@ -33,7 +26,7 @@ Windows:
 2. Run pipeline:
 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --type incremental --geomodel f --oopenmvs```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfmtype incremental --geomodel f --runopenmvg --runopenmvs```
 
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
@@ -43,7 +36,7 @@ You should end up with something like this (press ctrl/cmd-k to disable backface
 1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
 2. Run pipeline: 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --type incremental --geomodel f --oopenmvs --densify```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfmtype incremental --geomodel f --runopenmvg --runopenmvs --densify```
 
 The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
 
@@ -63,21 +56,27 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
         --output [directory]
             Output directory
 
-        --type [string]
+        --sfmtype [string]
             Select SfM mode from Global SfM or Incremental SfM. Possible values:
             incremental
             global
         
-        --oopenmvs
-            Export project to OpenMVS
-        
-        --omeshlab
-            Export project to Meshlab
+        --runopenmvg
+            Run OpenMVG SfM pipeline
 
+        --runopenmvs
+            Run OpenMVS MVS pipeline
+        
     Optional settings:
 
         --recompute
             Recompute everything
+
+        --openmvg [path]
+            Set OpenMVG install location
+        
+        --openmvs [path]
+            Set OpenMVS install location
 
     OpenMVG
 
@@ -127,7 +126,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 h: Homography matrix filtering
                     For datasets that have same point of projection
         
-            --nmatching [string]
+            --matching [string]
                 Compute Matches Nearest Matching Method:
                 BRUTEFORCEL2: BruteForce L2 matching for Scalar based regions descriptor,
                 ANNL2: Approximate Nearest Neighbor L2 matching for Scalar based regions descriptor,
@@ -159,7 +158,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
     OpenMVS
 
-        --output-obj
+        --outputobj
             Make OpenMVS output obj instead of ply (default)
 
         DensifyPointCloud
@@ -167,39 +166,50 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             --densify
                 Enable dense reconstruction
                 Default: Off
+            
+            --densifyonly
+                Only densify (duh)
 
-            --dnviews
+            --dnumviewsfuse [int]
                 Number of views used for depth-map estimation
                 0 all neighbor views available
                 Default: 4
         
-            --dnfviews
+            --dnumfiles [int]
                 Minimum number of images that agrees with an estimate during fusion in order to consider it
                 inliner
                 Default: 3
 
-            --drlevel
+            --dreslevel [int]
                 How many times to scale down the images before point cloud computation. For better accuracy/speed width
                 high resolution images use 2 or even 3
                 Default: 1
         
         ReconstructMesh
 
-            --rtfactor
+            --rcthickness [int]
                 ReconstructMesh Thickness Factor
                 Default: 2
             
-            --rmpdistance
+            --rcdistance [int]
                 Minimum distance in pixels between the projection of two 3D points to consider them different while
                 triangulating (0 to disable). Use to reduce amount of memory used with a penalty of lost detail
                 Default: 2
         
         RefineMesh
-            --rscales
+            --rmiterations [int]
                 Number of RefineMesh iterations
                 Default: 3
 
-            --rlevel
+            --rmlevel [int]
                 Times to scale down the images before mesh refinement
                 Default: 0
 
+            --rmcuda
+                Use CUDA version of RefineMesh binary (will fall back the executable is not found)
+        
+        Texture Mesh
+            --txemptycolor [int]
+                Color of surfaces OpenMVS TextureMesh is unable to texture.
+                Default: 0 (black)
+        
