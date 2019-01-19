@@ -26,7 +26,7 @@ Docker:
 2. Run pipeline:
 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfmtype incremental --geomodel f --runopenmvg --runopenmvs```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --runopenmvg --runopenmvs```
 
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
@@ -36,7 +36,7 @@ You should end up with something like this (press ctrl/cmd-k to disable backface
 1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
 2. Run pipeline: 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfmtype incremental --geomodel f --runopenmvg --runopenmvs --densify```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --runopenmvg --runopenmvs --densify```
 
 The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
 
@@ -56,7 +56,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
         --output [directory]
             Output directory
 
-        --sfmtype [string]
+        --sfm-type [string]
             Select SfM mode from Global SfM or Incremental SfM. Possible values:
             incremental
             global

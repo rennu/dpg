@@ -14,16 +14,16 @@ def createParser():
         help='Output path',
         required=True)
 
-    required.add_argument('--sfmtype',
+    required.add_argument('--sfm-type',
         help='Select SfM type: global or incremental',
         choices=['global', 'incremental'],
         required=True)
 
     pipelines = parser.add_argument_group('Pipelines to run (min. 1 required)')
-    pipelines.add_argument('--runopenmvg',
+    pipelines.add_argument('--run-openmvg',
         action='store_true',
         help='Run OpenMVG pipeline')
-    pipelines.add_argument('--runopenmvs',
+    pipelines.add_argument('--run-openmvs',
         action='store_true',
         help='Run OpenMVS pipeline')
 
@@ -175,7 +175,7 @@ def createCommands(args):
         computeMatchesOptions += ['-f', '1']
 
     # OpenMVG SfM Pipeline Type
-    pipelineType = args.sfmtype
+    pipelineType = args.sfm_type
 
     # OpenMVG Image Listing
     if args.cgroup:
@@ -245,7 +245,7 @@ def createCommands(args):
     textureMeshOptions += openmvsOutputFormat
 
     # Create commands
-    if args.runopenmvg:
+    if args.run_openmvg:
         commands.append({
             'title': 'Instrics analysis',
             'command': [os.path.join(openmvgBin, 'openMVG_main_SfMInit_ImageListing'),  '-i', inputDirectory, '-o', matchesDirectory, '-d', cameraSensorsDB] + imageListingOptions
@@ -279,7 +279,7 @@ def createCommands(args):
                 'command': [os.path.join(openmvgBin, 'openMVG_main_ComputeSfM_DataColor'), '-i', os.path.join(reconstructionDirectory, 'sfm_data.bin'), '-o', os.path.join(reconstructionDirectory, 'colorized.ply') ]
             })
 
-    if args.runopenmvs:
+    if args.run_openmvs:
         sceneFileName = ['scene']
 
         commands.append({
@@ -334,11 +334,11 @@ def createCommands(args):
             print('')
         sys.exit()
     else:
-        if args.runopenmvg and not os.path.exists(matchesDirectory):
+        if args.run_openmvg and not os.path.exists(matchesDirectory):
             os.makedirs(matchesDirectory)
-        if args.runopenmvg and not os.path.exists(reconstructionDirectory):
+        if args.run_openmvg and not os.path.exists(reconstructionDirectory):
             os.makedirs(reconstructionDirectory)
-        if args.runopenmvs and not os.path.exists(MVSDirectory):
+        if args.run_openmvs and not os.path.exists(MVSDirectory):
             os.makedirs(MVSDirectory)
 
     return commands

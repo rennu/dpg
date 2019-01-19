@@ -4,7 +4,6 @@ MAINTAINER Speden Aave <renfld@gmail.com>
 WORKDIR /tmp
 ADD build.sh /tmp/build.sh
 RUN /tmp/build.sh
-RUN git clone https://github.com/rennu/dpg.git /opt/dpg
 
 # ..and then create a more lightweight image to actually run stuff in.
 FROM ubuntu:16.04
@@ -37,6 +36,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     libcxsparse3.1.4 \
     python-minimal
 COPY --from=build /opt /opt
+COPY pipeline.py /opt/dpg/pipeline.py
 RUN groupadd -g $GID ptools
 RUN useradd -r -u $UID -m -g ptools ptools
 WORKDIR /
