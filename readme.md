@@ -10,7 +10,7 @@ Windows:
 2. Clone repository
 3. ```sudo ./build.sh```
 
-Linux (Ubuntu 18.04):
+Linux (Ubuntu 16.04):
 1. Clone repository
 2. ```sudo ./build.sh```
 
