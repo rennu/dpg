@@ -6,7 +6,7 @@ Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and 
 
 ## Installation
 Windows:
-1. Install Windows Subsystem for Linux (Ubuntu 18.04)
+1. Install Windows Subsystem for Linux (Ubuntu 16.04)
 2. Clone repository
 3. ```sudo ./build.sh```
 
