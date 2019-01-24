@@ -94,7 +94,7 @@ def createParser():
         choices=[1, 2, 3])
 
     openmvs = parser.add_argument_group('OpenMVS')
-    openmvs.add_argument('--outputobj',
+    openmvs.add_argument('--out-putobj',
         action='store_true',
         help='Output mesh files as obj instead of ply')
 
@@ -102,7 +102,7 @@ def createParser():
     openmvsDensify.add_argument('--densify',
         action='store_true',
         help='Enable dense reconstruction')
-    openmvsDensify.add_argument('--densifyonly',
+    openmvsDensify.add_argument('--densify-only',
         action='store_true',
         help='Densify pointcloud and exit')
     openmvsDensify.add_argument('--dnumviewsfuse',
@@ -213,7 +213,7 @@ def createCommands(args):
 
     # OpenMVS Output Format
     openmvsOutputFormat = []
-    if args.outputobj:
+    if args.output_obj:
         openmvsOutputFormat = ['--export-type', 'obj']
 
     # OpenMVS Densify Mesh
@@ -288,14 +288,14 @@ def createCommands(args):
         })
 
         # Do densifyPointCloud or not
-        if args.densify or args.densifyonly:
+        if args.densify or args.densify_only:
             commands.append({
                 'title': 'Densify point cloud',
                 'command': [os.path.join(openmvsBin, 'DensifyPointCloud'), 'scene.mvs', '-w', MVSDirectory, '-v', '0'] + densifyPointCloudOptions
             })
             sceneFileName.append('dense')
 
-        if not args.densifyonly:
+        if not args.densify_only:
             mvsFileName = '_'.join(sceneFileName) + '.mvs'
             commands.append({
                 'title': 'Reconstruct mesh',
