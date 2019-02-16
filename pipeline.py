@@ -105,10 +105,10 @@ def createParser():
     openmvsDensify.add_argument('--densify-only',
         action='store_true',
         help='Densify pointcloud and exit')
-    openmvsDensify.add_argument('--dnumviewsfuse',
+    openmvsDensify.add_argument('--dnumviews',
         type=int,
         help='Number of view used for depth-map estimation. 0 for all neighbor views available. Default: 4')
-    openmvsDensify.add_argument('--dnumviews',
+    openmvsDensify.add_argument('--dnumviewsfuse',
         type=int,
         help='Minimum number of images that agrees with an estimate during fusion in order to consider it inliner. Default: 3')
     openmvsDensify.add_argument('--dreslevel',

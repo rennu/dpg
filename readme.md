@@ -158,7 +158,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
     OpenMVS
 
-        --outputobj
+        --output-obj
             Make OpenMVS output obj instead of ply (default)
 
         DensifyPointCloud:
@@ -170,12 +170,12 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             --densify-only
                 Only densify (duh)
 
-            --dnumviewsfuse [int]
+            --dnumviews [int]
                 Number of views used for depth-map estimation
                 0 all neighbor views available
                 Default: 4
         
-            --dnumfiles [int]
+            --dnumviewsfuse [int]
                 Minimum number of images that agrees with an estimate during fusion in order to consider it
                 inliner
                 Default: 3
