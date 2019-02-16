@@ -94,7 +94,7 @@ def createParser():
         choices=[1, 2, 3])
 
     openmvs = parser.add_argument_group('OpenMVS')
-    openmvs.add_argument('--out-putobj',
+    openmvs.add_argument('--output-obj',
         action='store_true',
         help='Output mesh files as obj instead of ply')
 
