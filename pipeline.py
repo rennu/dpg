@@ -14,16 +14,16 @@ def createParser():
         help='Output path',
         required=True)
 
-    required.add_argument('--sfmtype',
+    required.add_argument('--sfm-type',
         help='Select SfM type: global or incremental',
         choices=['global', 'incremental'],
         required=True)
 
     pipelines = parser.add_argument_group('Pipelines to run (min. 1 required)')
-    pipelines.add_argument('--runopenmvg',
+    pipelines.add_argument('--run-openmvg',
         action='store_true',
         help='Run OpenMVG pipeline')
-    pipelines.add_argument('--runopenmvs',
+    pipelines.add_argument('--run-openmvs',
         action='store_true',
         help='Run OpenMVS pipeline')
 
@@ -94,7 +94,7 @@ def createParser():
         choices=[1, 2, 3])
 
     openmvs = parser.add_argument_group('OpenMVS')
-    openmvs.add_argument('--outputobj',
+    openmvs.add_argument('--output-obj',
         action='store_true',
         help='Output mesh files as obj instead of ply')
 
@@ -102,13 +102,13 @@ def createParser():
     openmvsDensify.add_argument('--densify',
         action='store_true',
         help='Enable dense reconstruction')
-    openmvsDensify.add_argument('--densifyonly',
+    openmvsDensify.add_argument('--densify-only',
         action='store_true',
         help='Densify pointcloud and exit')
-    openmvsDensify.add_argument('--dnumviewsfuse',
+    openmvsDensify.add_argument('--dnumviews',
         type=int,
         help='Number of view used for depth-map estimation. 0 for all neighbor views available. Default: 4')
-    openmvsDensify.add_argument('--dnumviews',
+    openmvsDensify.add_argument('--dnumviewsfuse',
         type=int,
         help='Minimum number of images that agrees with an estimate during fusion in order to consider it inliner. Default: 3')
     openmvsDensify.add_argument('--dreslevel',
@@ -175,7 +175,7 @@ def createCommands(args):
         computeMatchesOptions += ['-f', '1']
 
     # OpenMVG SfM Pipeline Type
-    pipelineType = args.sfmtype
+    pipelineType = args.sfm_type
 
     # OpenMVG Image Listing
     if args.cgroup:
@@ -213,7 +213,7 @@ def createCommands(args):
 
     # OpenMVS Output Format
     openmvsOutputFormat = []
-    if args.outputobj:
+    if args.output_obj:
         openmvsOutputFormat = ['--export-type', 'obj']
 
     # OpenMVS Densify Mesh
@@ -245,7 +245,7 @@ def createCommands(args):
     textureMeshOptions += openmvsOutputFormat
 
     # Create commands
-    if args.runopenmvg:
+    if args.run_openmvg:
         commands.append({
             'title': 'Instrics analysis',
             'command': [os.path.join(openmvgBin, 'openMVG_main_SfMInit_ImageListing'),  '-i', inputDirectory, '-o', matchesDirectory, '-d', cameraSensorsDB] + imageListingOptions
@@ -279,7 +279,7 @@ def createCommands(args):
                 'command': [os.path.join(openmvgBin, 'openMVG_main_ComputeSfM_DataColor'), '-i', os.path.join(reconstructionDirectory, 'sfm_data.bin'), '-o', os.path.join(reconstructionDirectory, 'colorized.ply') ]
             })
 
-    if args.runopenmvs:
+    if args.run_openmvs:
         sceneFileName = ['scene']
 
         commands.append({
@@ -288,14 +288,14 @@ def createCommands(args):
         })
 
         # Do densifyPointCloud or not
-        if args.densify or args.densifyonly:
+        if args.densify or args.densify_only:
             commands.append({
                 'title': 'Densify point cloud',
                 'command': [os.path.join(openmvsBin, 'DensifyPointCloud'), 'scene.mvs', '-w', MVSDirectory, '-v', '0'] + densifyPointCloudOptions
             })
             sceneFileName.append('dense')
 
-        if not args.densifyonly:
+        if not args.densify_only:
             mvsFileName = '_'.join(sceneFileName) + '.mvs'
             commands.append({
                 'title': 'Reconstruct mesh',
@@ -334,11 +334,11 @@ def createCommands(args):
             print('')
         sys.exit()
     else:
-        if args.runopenmvg and not os.path.exists(matchesDirectory):
+        if args.run_openmvg and not os.path.exists(matchesDirectory):
             os.makedirs(matchesDirectory)
-        if args.runopenmvg and not os.path.exists(reconstructionDirectory):
+        if args.run_openmvg and not os.path.exists(reconstructionDirectory):
             os.makedirs(reconstructionDirectory)
-        if args.runopenmvs and not os.path.exists(MVSDirectory):
+        if args.run_openmvs and not os.path.exists(MVSDirectory):
             os.makedirs(MVSDirectory)
 
     return commands

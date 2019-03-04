@@ -6,13 +6,13 @@ Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and 
 
 ## Installation
 Windows:
-1. Install Windows Subsystem for Linux (Ubuntu 18.04)
+1. Install Windows Subsystem for Linux (Ubuntu 16.04)
 2. Clone repository
-3. ```sudo ./install```
+3. ```sudo ./build.sh```
 
-Linux (Ubuntu 18.04):
+Linux (Ubuntu 16.04):
 1. Clone repository
-2. ```sudo ./install```
+2. ```sudo ./build.sh```
 
 Docker:
 1. Clone repository
@@ -26,7 +26,7 @@ Docker:
 2. Run pipeline:
 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfmtype incremental --geomodel f --runopenmvg --runopenmvs```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs```
 
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
@@ -36,7 +36,7 @@ You should end up with something like this (press ctrl/cmd-k to disable backface
 1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
 2. Run pipeline: 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfmtype incremental --geomodel f --runopenmvg --runopenmvs --densify```
+```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --densify```
 
 The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
 
@@ -56,15 +56,15 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
         --output [directory]
             Output directory
 
-        --sfmtype [string]
+        --sfm-type [string]
             Select SfM mode from Global SfM or Incremental SfM. Possible values:
             incremental
             global
         
-        --runopenmvg
+        --run-openmvg
             Run OpenMVG SfM pipeline
 
-        --runopenmvs
+        --run-openmvs
             Run OpenMVS MVS pipeline
         
     Optional settings:
@@ -134,7 +134,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 FASTCASCADEHASHINGL2: (default)
                     * L2 Cascade Hashing with precomputed hashed regions, (faster than CASCADEHASHINGL2 but use more memory).
 
-        Incremental SfM
+        Incremental SfM:
 
             --icmodel [int]
                 The camera model type that will be used for views with unknown intrinsic
@@ -144,7 +144,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 4: Pinhole radial 3 + tangential 2
                 5: Pinhole fisheye
 
-        Global SfM
+        Global SfM:
 
             --grotavg [int]
                 1: L1 rotation averaging [Chatterjee]
@@ -158,24 +158,24 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
     OpenMVS
 
-        --outputobj
+        --output-obj
             Make OpenMVS output obj instead of ply (default)
 
-        DensifyPointCloud
+        DensifyPointCloud:
 
             --densify
                 Enable dense reconstruction
                 Default: Off
             
-            --densifyonly
+            --densify-only
                 Only densify (duh)
 
-            --dnumviewsfuse [int]
+            --dnumviews [int]
                 Number of views used for depth-map estimation
                 0 all neighbor views available
                 Default: 4
         
-            --dnumfiles [int]
+            --dnumviewsfuse [int]
                 Minimum number of images that agrees with an estimate during fusion in order to consider it
                 inliner
                 Default: 3
@@ -185,7 +185,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 high resolution images use 2 or even 3
                 Default: 1
         
-        ReconstructMesh
+        ReconstructMesh:
 
             --rcthickness [int]
                 ReconstructMesh Thickness Factor
@@ -196,7 +196,8 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 triangulating (0 to disable). Use to reduce amount of memory used with a penalty of lost detail
                 Default: 2
         
-        RefineMesh
+        RefineMesh:
+
             --rmiterations [int]
                 Number of RefineMesh iterations
                 Default: 3
@@ -208,7 +209,8 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             --rmcuda
                 Use CUDA version of RefineMesh binary (will fall back the executable is not found)
         
-        Texture Mesh
+        Texture Mesh:
+
             --txemptycolor [int]
                 Color of surfaces OpenMVS TextureMesh is unable to texture.
                 Default: 0 (black)

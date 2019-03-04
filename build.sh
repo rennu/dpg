@@ -9,15 +9,8 @@ apt-get -y update && apt-get upgrade -y
 apt-get install -y  \
   build-essential \
   cmake \
-  curl \
-  dstat \
-  exiftool \
-  ffmpeg \
-  gdb \
   git \
   graphviz \
-  htop \
-  joe \
   libatlas-base-dev \
   libboost-filesystem-dev \
   libboost-iostreams-dev \
@@ -48,7 +41,6 @@ apt-get install -y  \
   mediainfo \
   mercurial \
   qtbase5-dev \
-  unzip \
   libatlas-base-dev \
   libsuitesparse-dev
 mkdir /tmp/build
@@ -58,13 +50,13 @@ git clone -b develop --recursive https://github.com/openMVG/openMVG.git /tmp/bui
 cd /tmp/build/openmvg
 mkdir /tmp/build/openmvg_build && cd /tmp/build/openmvg_build 
 cmake -DCMAKE_BUILD_TYPE=RELEASE . /tmp/build/openmvg/src -DCMAKE_INSTALL_PREFIX=/opt/openmvg 
-make  && make install 
+make -j2  && make install 
 
 # Install eigen
 hg clone https://bitbucket.org/eigen/eigen#3.2 /tmp/build/eigen 
 mkdir /tmp/build/eigen_build && cd /tmp/build/eigen_build 
 cmake . ../eigen 
-make  && make install 
+make -j2 && make install 
 
 # Get vcglib
 git clone https://github.com/cdcseacave/VCG.git /tmp/build/vcglib 
@@ -74,23 +66,25 @@ git clone https://ceres-solver.googlesource.com/ceres-solver /tmp/build/ceres_so
 cd /tmp/build/ceres_solver && git checkout $(git describe --tags)
 mkdir /tmp/build/ceres_build && cd /tmp/build/ceres_build
 cmake . ../ceres_solver/ -DMINIGLOG=ON -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF 
-make  && make install
+make -j2 && make install
 
 # Install openmvs
 git clone https://github.com/cdcseacave/openMVS.git /tmp/build/openmvs 
 cd /tmp/build/openmvs
 mkdir /tmp/build/openmvs_build && cd /tmp/build/openmvs_build
 cmake . ../openmvs -DCMAKE_BUILD_TYPE=Release -DVCG_DIR="/tmp/build/vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs 
-make  && make install
+make -j2 && make install
 
 # Install cmvs-pmvs
 git clone https://github.com/pmoulon/CMVS-PMVS /tmp/build/cmvs-pmvs
 mkdir /tmp/build/cmvs-pmvs_build && cd /tmp/build/cmvs-pmvs_build
 cmake ../cmvs-pmvs/program -DCMAKE_INSTALL_PREFIX=/opt/cmvs
-make  && make install
+make -j2 && make install
 
 # Install colmap
 git clone -b master https://github.com/colmap/colmap /tmp/build/colmap
 mkdir -p /tmp/build/colmap_build && cd /tmp/build/colmap_build
 cmake . ../colmap -DCMAKE_INSTALL_PREFIX=/opt/colmap
-make && make install
+make -j2 && make install
+
+rm -rf /tmp/build
