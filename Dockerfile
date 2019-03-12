@@ -41,3 +41,4 @@ RUN groupadd -g $GID ptools
 RUN useradd -r -u $UID -m -g ptools ptools
 WORKDIR /
 USER ptools
+ENV PATH=/opt/openmvs/bin/OpenMVS:/opt/openmvg/bin:/opt/cmvs/bin:/opt/colmap/bin:/opt/dpg:$PATH
