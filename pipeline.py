@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import argparse, os, subprocess, time, math, sys
+import argparse, os, subprocess, time, math, sys, errno
 
 def createParser():
     parser = argparse.ArgumentParser(description='OpenMVG/OpenMVS pipeline')
@@ -354,9 +354,19 @@ def runCommand(cmd):
     #         print line
     # process.communicate()
     # return process.returncode
-    p = subprocess.Popen(cmd)
-    p.communicate()
-    return p.returncode
+    try:
+        p = subprocess.Popen(cmd)
+        p.communicate()
+        return p.returncode
+    except OSError as err:
+        if err.errno == errno.ENOENT:
+            print("Could not find executable: {0} - Have you installed all the requirements?".format(cmd[0]))
+        else:
+            print("Could not run command: {0}".format(err))
+        return -1
+    except:
+        print("Could not run command")
+        return -1
 
 def runCommands(commands):
     startTime = int(time.time())
