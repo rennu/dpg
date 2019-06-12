@@ -1,3 +1,4 @@
+set -e
 echo ubuntu soft core unlimited >> /etc/security/limits.conf
 echo ubuntu hard core unlimited >> /etc/security/limits.conf
 cd /tmp
