@@ -7,8 +7,6 @@ RUN /tmp/build.sh
 
 # ..and then create a more lightweight image to actually run stuff in.
 FROM ubuntu:16.04
-ARG UID=1000
-ARG GID=1000
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     curl \
     exiftool \
@@ -37,8 +35,5 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python-minimal
 COPY --from=build /opt /opt
 COPY pipeline.py /opt/dpg/pipeline.py
-RUN groupadd -g $GID ptools
-RUN useradd -r -u $UID -m -g ptools ptools
 WORKDIR /
-USER ptools
 ENV PATH=/opt/openmvs/bin/OpenMVS:/opt/openmvg/bin:/opt/cmvs/bin:/opt/colmap/bin:/opt/dpg:$PATH
