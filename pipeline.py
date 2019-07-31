@@ -142,8 +142,13 @@ def createParser():
         default=0,
         type=int,
         help='Color of surfaces OpenMVS TextureMesh is unable to texture. Default: 0 (black)')
+    openmvsTexture.add_argument('--txreslevel',
+        default=0,
+        type=int,
+        help='Times to scale down the images before refiment')
+    
     return parser
-
+    
 def createCommands(args):
     imageListingOptions = []
     computeFeaturesOptions = []
@@ -247,6 +252,8 @@ def createCommands(args):
     # OpenMVS Texture Mesh
     if args.txemptycolor != None:
         textureMeshOptions += ['--empty-color', args.txemptycolor]
+    if args.txreslevel != None:
+        textureMeshOptions += ['--resolution-level', args.txreslevel]
     textureMeshOptions += openmvsOutputFormat
 
     # Create commands
