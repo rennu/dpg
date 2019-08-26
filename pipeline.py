@@ -52,7 +52,7 @@ def createParser():
         action='store_true',
         help='Each view has it\'s own camera intrisic parameters')
     imageListing.add_argument('--flength',
-        type=int,
+        type=float,
         help='If your camera is not listed in the camera sensor database, you can set pixel focal length here. The value can be calculated by max(width-pixels, height-pixels) * focal length(mm) / Sensor width')
     imageListing.add_argument('--cmodel', type=int,
         help='Camera model: 1. Pinhole 2. Pinhole Radial 1 3. Pinhole Radial 3 (Default) 4. Pinhole Brown 5. Pinhole with a Simple Fish-eye Distortion',
