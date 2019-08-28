@@ -1,6 +1,9 @@
 #!/usr/bin/python
 
-import argparse, os, subprocess, time, math, sys
+import argparse, os, subprocess, time, math, sys, errno
+
+MVSDirectory = ''
+outputDirectory = ''
 
 def createParser():
     parser = argparse.ArgumentParser(description='OpenMVG/OpenMVS pipeline')
@@ -49,7 +52,7 @@ def createParser():
         action='store_true',
         help='Each view has it\'s own camera intrisic parameters')
     imageListing.add_argument('--flength',
-        type=int,
+        type=float,
         help='If your camera is not listed in the camera sensor database, you can set pixel focal length here. The value can be calculated by max(width-pixels, height-pixels) * focal length(mm) / Sensor width')
     imageListing.add_argument('--cmodel', type=int,
         help='Camera model: 1. Pinhole 2. Pinhole Radial 1 3. Pinhole Radial 3 (Default) 4. Pinhole Brown 5. Pinhole with a Simple Fish-eye Distortion',
@@ -139,8 +142,13 @@ def createParser():
         default=0,
         type=int,
         help='Color of surfaces OpenMVS TextureMesh is unable to texture. Default: 0 (black)')
+    openmvsTexture.add_argument('--txreslevel',
+        default=0,
+        type=int,
+        help='Times to scale down the images before refiment')
+    
     return parser
-
+    
 def createCommands(args):
     imageListingOptions = []
     computeFeaturesOptions = []
@@ -154,9 +162,11 @@ def createCommands(args):
     commands = []
 
     inputDirectory = args.input
+    global outputDirectory
     outputDirectory = args.output
     matchesDirectory = os.path.join(outputDirectory, 'matches')
     reconstructionDirectory = os.path.join(outputDirectory, 'reconstruction_global')
+    global MVSDirectory
     MVSDirectory = os.path.join(outputDirectory, 'omvs')
     openmvgBin = '/opt/openmvg/bin'
     cameraSensorsDB = '/opt/openmvg/share/openMVG/sensor_width_camera_database.txt'
@@ -222,7 +232,7 @@ def createCommands(args):
     if args.dnumviews != None:
         densifyPointCloudOptions += ['--number-views', args.dnviews]
     if args.dreslevel != None:
-        densifyPointCloudOptions += ['--resolution-level', args.drlevel]
+        densifyPointCloudOptions += ['--resolution-level', args.dreslevel]
     densifyPointCloudOptions += openmvsOutputFormat
 
     # OpenMVS Reconstruct Mesh
@@ -242,6 +252,8 @@ def createCommands(args):
     # OpenMVS Texture Mesh
     if args.txemptycolor != None:
         textureMeshOptions += ['--empty-color', args.txemptycolor]
+    if args.txreslevel != None:
+        textureMeshOptions += ['--resolution-level', args.txreslevel]
     textureMeshOptions += openmvsOutputFormat
 
     # Create commands
@@ -291,7 +303,7 @@ def createCommands(args):
         if args.densify or args.densify_only:
             commands.append({
                 'title': 'Densify point cloud',
-                'command': [os.path.join(openmvsBin, 'DensifyPointCloud'), 'scene.mvs', '-w', MVSDirectory, '-v', '0'] + densifyPointCloudOptions
+                'command': [os.path.join(openmvsBin, 'DensifyPointCloud'), 'scene.mvs', '-v', '0'] + densifyPointCloudOptions
             })
             sceneFileName.append('dense')
 
@@ -299,7 +311,7 @@ def createCommands(args):
             mvsFileName = '_'.join(sceneFileName) + '.mvs'
             commands.append({
                 'title': 'Reconstruct mesh',
-                'command': [os.path.join(openmvsBin, 'ReconstructMesh'), mvsFileName, '-w', MVSDirectory, '-v', '0'] + reconstructMeshOptions
+                'command': [os.path.join(openmvsBin, 'ReconstructMesh'), mvsFileName, '-v', '0'] + reconstructMeshOptions
             })
             sceneFileName.append('mesh')
 
@@ -311,19 +323,19 @@ def createCommands(args):
             if rmCudaOk:
                 commands.append({
                     'title': 'Refine mesh using CUDA',
-                    'command': [os.path.join(openmvsBin, 'RefineMeshCUDA'), mvsFileName, '-w', MVSDirectory, '-v', '0'] + refineMeshOptions
+                    'command': [os.path.join(openmvsBin, 'RefineMeshCUDA'), mvsFileName, '-v', '0'] + refineMeshOptions
                 })
             else:
                 commands.append({
                     'title': 'Refine mesh',
-                    'command': [os.path.join(openmvsBin, 'RefineMesh'), mvsFileName, '-w', MVSDirectory, '-v', '0'] + refineMeshOptions
+                    'command': [os.path.join(openmvsBin, 'RefineMesh'), mvsFileName, '-v', '0'] + refineMeshOptions
                 })
             sceneFileName.append('refine')
 
             mvsFileName = '_'.join(sceneFileName) + '.mvs'
             commands.append({
                 'title': 'Texture mesh',
-                'command': [os.path.join(openmvsBin, 'TextureMesh'), mvsFileName, '-w', MVSDirectory, '-v', '0'] + textureMeshOptions
+                'command': [os.path.join(openmvsBin, 'TextureMesh'), mvsFileName, '-v', '0'] + textureMeshOptions
             })
 
     if args.debug:
@@ -344,19 +356,22 @@ def createCommands(args):
     return commands
 
 def runCommand(cmd):
-    # Fix later:
-    # process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    # while True:
-    #     line = process.stdout.readline().rstrip()
-    #     if not line:
-    #         break
-    #     else:
-    #         print line
-    # process.communicate()
-    # return process.returncode
-    p = subprocess.Popen(cmd)
-    p.communicate()
-    return p.returncode
+    cwd = outputDirectory
+    if "OpenMVS" in cmd[0]:
+        cwd = MVSDirectory
+    try:
+        p = subprocess.Popen(cmd, cwd = cwd)
+        p.communicate()
+        return p.returncode
+    except OSError as err:
+        if err.errno == errno.ENOENT:
+            print("Could not find executable: {0} - Have you installed all the requirements?".format(cmd[0]))
+        else:
+            print("Could not run command: {0}".format(err))
+        return -1
+    except:
+        print("Could not run command")
+        return -1
 
 def runCommands(commands):
     startTime = int(time.time())
