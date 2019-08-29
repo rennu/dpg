@@ -1,3 +1,7 @@
+## Example call for boulder problem
+
+`/opt/dpg/pipeline.py --input /datasets/images/jim.zip --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --output-obj`
+
 # OpenMVG + OpenMVS Pipeline
 
 Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and [OpenMVS](https://github.com/cdcseacave/openMVS).
@@ -5,38 +9,43 @@ Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and 
 (Also includes [CMVS](https://github.com/pmoulon/CMVS-PMVS) and [COLMAP](https://github.com/colmap/colmap)).
 
 ## Installation
+
 Windows:
+
 1. Install Windows Subsystem for Linux (Ubuntu 16.04)
 2. Clone repository
-3. ```sudo ./build.sh```
+3. `sudo ./build.sh`
 
 Linux (Ubuntu 16.04):
+
 1. Clone repository
-2. ```sudo ./build.sh```
+2. `sudo ./build.sh`
 
 Docker:
+
 1. Clone repository
-2. ```docker build -t dpg .```
-3. ```docker run -v $(pwd):/datasets --rm -it dpg```
+2. `docker build -t dpg .`
+3. `docker run -v $(pwd):/datasets --rm -it dpg`
 
 ## Examples
 
 ### Mesh Reconstruction with Textures by using Incremental Structure from Motion
+
 1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
 2. Run pipeline:
 
+`/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs`
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs```
-
-3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
+3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under \$datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
 You should end up with something like this (press ctrl/cmd-k to disable backface culling) ![Example 1](https://i.imgur.com/CpSs2SE.jpg)
 
 ### Dense Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
-2. Run pipeline: 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --densify```
+1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
+2. Run pipeline:
+
+`/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --densify`
 
 The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
 
@@ -60,13 +69,13 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             Select SfM mode from Global SfM or Incremental SfM. Possible values:
             incremental
             global
-        
+
         --run-openmvg
             Run OpenMVG SfM pipeline
 
         --run-openmvs
             Run OpenMVS MVS pipeline
-        
+
     Optional settings:
 
         --recompute
@@ -74,7 +83,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
         --openmvg [path]
             Set OpenMVG install location
-        
+
         --openmvs [path]
             Set OpenMVS install location
 
@@ -125,7 +134,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                     For Global SfM
                 h: Homography matrix filtering
                     For datasets that have same point of projection
-        
+
             --matching [string]
                 Compute Matches Nearest Matching Method:
                 BRUTEFORCEL2: BruteForce L2 matching for Scalar based regions descriptor,
@@ -166,7 +175,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
             --densify
                 Enable dense reconstruction
                 Default: Off
-            
+
             --densify-only
                 Only densify (duh)
 
@@ -174,7 +183,7 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 Number of views used for depth-map estimation
                 0 all neighbor views available
                 Default: 4
-        
+
             --dnumviewsfuse [int]
                 Minimum number of images that agrees with an estimate during fusion in order to consider it
                 inliner
@@ -184,18 +193,18 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
                 How many times to scale down the images before point cloud computation. For better accuracy/speed width
                 high resolution images use 2 or even 3
                 Default: 1
-        
+
         ReconstructMesh:
 
             --rcthickness [int]
                 ReconstructMesh Thickness Factor
                 Default: 2
-            
+
             --rcdistance [int]
                 Minimum distance in pixels between the projection of two 3D points to consider them different while
                 triangulating (0 to disable). Use to reduce amount of memory used with a penalty of lost detail
                 Default: 2
-        
+
         RefineMesh:
 
             --rmiterations [int]
@@ -208,10 +217,9 @@ The end result should look something like this ![Example 2](https://i.imgur.com/
 
             --rmcuda
                 Use CUDA version of RefineMesh binary (will fall back the executable is not found)
-        
+
         Texture Mesh:
 
             --txemptycolor [int]
                 Color of surfaces OpenMVS TextureMesh is unable to texture.
                 Default: 0 (black)
-        

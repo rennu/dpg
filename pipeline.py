@@ -360,7 +360,7 @@ def createCommands(args):
     if args.output_obj:
 
         inputName = '_'.join(sceneFileName) + '_texture.obj'
-        outputName = '_'.join(sceneFileName) + '_texture_compressed.obj'
+        outputName = 'index.obj'
         commands.append({
             'title': 'check dir',
             'command': ['ls']
@@ -370,6 +370,22 @@ def createCommands(args):
             'command': ['../../home/ptools/go/bin/obj-simplify', '-in', './omvs/' + inputName, '-out', './omvs/' + outputName]
         })
         # copy needed files
+        commands.append({
+            'title': 'Copying files',
+            'command': ['mkdir', './' + finalFilename]
+        })
+        commands.append({
+            'title': 'Move obj file',
+            'command': ['cp', './omvs/' + outputName, './' + finalFilename]
+        })
+        commands.append({
+            'title': 'Move texture',
+            'command': ['cp', './omvs/scene_mesh_refine_texture_material_0_map_Kd.jpg', './' + finalFilename]
+        })
+        commands.append({
+            'title': 'Move mtl file',
+            'command': ['cp', './omvs/scene_mesh_refine_texture.mtl', './' + finalFilename]
+        })
 
     if args.debug:
         for instruction in commands:
