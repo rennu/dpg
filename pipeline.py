@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import argparse, os, subprocess, time, math, sys, errno
+import argparse, os, subprocess, time, math, sys, errno, cv2, zipfile
 
 MVSDirectory = ''
 outputDirectory = ''
@@ -161,7 +161,15 @@ def createCommands(args):
     textureMeshOptions = []
     commands = []
 
-    inputDirectory = args.input
+    inputZip = args.input
+    outputZipDir = os.path.splitext(inputZip)[0]
+    print('outputZipDir: ', outputZipDir)
+    os.mkdir(outputZipDir)
+    with zipfile.ZipFile(inputZip, 'r') as zip_ref:
+        zip_ref.extractall(outputZipDir)
+    inputDirectory = outputZipDir
+    global finalFilename
+    finalFilename = os.path.basename(outputZipDir)
     global outputDirectory
     outputDirectory = args.output
     matchesDirectory = os.path.join(outputDirectory, 'matches')
@@ -171,6 +179,16 @@ def createCommands(args):
     openmvgBin = '/opt/openmvg/bin'
     cameraSensorsDB = '/opt/openmvg/share/openMVG/sensor_width_camera_database.txt'
     openmvsBin = '/opt/openmvs/bin/OpenMVS'
+    # get max size of first image to use as default
+    for fname in os.listdir(inputDirectory):
+        imageOne = os.path.join(inputDirectory, fname)
+        if os.path.isdir(imageOne):
+            # skip directories
+            continue
+    img = cv2.imread(imageOne, 0)
+    height, width = img.shape[:2]
+    maxImageDim = max(height, width)
+
 
     if args.openmvg != None:
         openmvgBin = os.path.join(args.openmvg, 'bin')
@@ -192,6 +210,8 @@ def createCommands(args):
         imageListingOptions += ['-g', '0']
     if args.flength != None:
         imageListingOptions += ['-f', args.flength]
+    else:
+        imageListingOptions += ['-f', maxImageDim * 1.2]
     if args.cmodel != None:
         imageListingOptions += ['-c', args.cmodel]
 
@@ -337,6 +357,19 @@ def createCommands(args):
                 'title': 'Texture mesh',
                 'command': [os.path.join(openmvsBin, 'TextureMesh'), mvsFileName, '-v', '0'] + textureMeshOptions
             })
+    if args.output_obj:
+
+        inputName = '_'.join(sceneFileName) + '_texture.obj'
+        outputName = '_'.join(sceneFileName) + '_texture_compressed.obj'
+        commands.append({
+            'title': 'check dir',
+            'command': ['ls']
+        })
+        commands.append({
+            'title': 'Compress obj file',
+            'command': ['../../home/ptools/go/bin/obj-simplify', '-in', './omvs/' + inputName, '-out', './omvs/' + outputName]
+        })
+        # copy needed files
 
     if args.debug:
         for instruction in commands:
