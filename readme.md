@@ -15,6 +15,13 @@ Linux (Ubuntu 16.04):
 2. ```sudo ./build.sh```
 
 Docker:
+
+You can either use a prebuilt image or build it by youself. To use the prebuilt image:
+
+```docker run -v $(pwd):/datasets --rm -it spedenaave/dpg```
+
+To build and run the image by yourself:
+
 1. Clone repository
 2. ```docker build -t dpg .```
 3. ```docker run -v $(pwd):/datasets --rm -it dpg```
@@ -26,7 +33,7 @@ Docker:
 2. Run pipeline:
 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs```
+```pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs```
 
 3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
 
@@ -36,7 +43,7 @@ You should end up with something like this (press ctrl/cmd-k to disable backface
 1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
 2. Run pipeline: 
 
-```/opt/dpg/pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --densify```
+```pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --densify```
 
 The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
 
