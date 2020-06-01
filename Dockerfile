@@ -1,4 +1,4 @@
-FROM ubuntu:16.04 AS updated
+FROM ubuntu:20.04 AS updated
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get upgrade -qq
 
@@ -52,7 +52,7 @@ RUN git clone -b develop --recursive https://github.com/openMVG/openMVG.git open
   make install
 
 # Install eigen
-RUN hg clone https://bitbucket.org/eigen/eigen#3.2 eigen && \
+RUN git clone https://gitlab.com/libeigen/eigen.git --branch 3.2 && \
   mkdir eigen_build && cd eigen_build && \
   cmake . ../eigen && \
   make -j4 && \
@@ -84,11 +84,12 @@ RUN git clone https://github.com/pmoulon/CMVS-PMVS /tmp/build/cmvs-pmvs && \
   make install
 
 # Install colmap
-RUN git clone -b master https://github.com/colmap/colmap /tmp/build/colmap && \
-  mkdir -p /tmp/build/colmap_build && cd /tmp/build/colmap_build && \
-  cmake . ../colmap -DCMAKE_INSTALL_PREFIX=/opt/colmap && \
-  make -j4 && \
-  make install
+# Both master and dev seem broken so commented out for now
+#RUN git clone -b dev https://github.com/colmap/colmap /tmp/build/colmap && \
+#  mkdir -p /tmp/build/colmap_build && cd /tmp/build/colmap_build && \
+#  cmake . ../colmap -DCMAKE_INSTALL_PREFIX=/opt/colmap && \
+#  make -j4 && \
+#  make install
 
 # ..and then create a more lightweight image to actually run stuff in.
 FROM updated
@@ -101,7 +102,7 @@ RUN apt-get update && apt-get install -y \
   ffmpeg \
   mediainfo \
   graphviz \
-  libpng12-0 \
+  libpng16-16 \
   libjpeg-turbo8 \
   libtiff5 \
   libxxf86vm1 \
@@ -109,22 +110,23 @@ RUN apt-get update && apt-get install -y \
   libxrandr2 \
   libatlas-base-dev \
   libqt5widgets5 \
-  libboost-iostreams1.58.0 \
-  libboost-program-options1.58.0 \
-  libboost-serialization1.58.0 \
-  libopencv-calib3d2.4v5 \
-  libopencv-highgui2.4v5 \
+  libboost-iostreams1.71.0 \
+  libboost-program-options1.71.0 \
+  libboost-serialization1.71.0 \
+  libopencv-calib3d4.2 \
+  libopencv-highgui4.2 \
   libgoogle-glog0v5 \
   libfreeimage3 \
-  libcgal11v5 \
-  libglew1.13 \
-  libcholmod3.0.6 \
-  libcxsparse3.1.4 \
-  python-minimal
+  libcgal-dev \
+  libglew2.1 \
+  libcholmod3 \
+  libcxsparse3 \
+  python2-minimal
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python2 1
 COPY --from=build /opt /opt
 COPY pipeline.py /opt/dpg/pipeline.py
-RUN echo ubuntu soft core unlimited >> /etc/security/limits.conf
-RUN echo ubuntu hard core unlimited >> /etc/security/limits.conf
+RUN echo ptools soft core unlimited >> /etc/security/limits.conf
+RUN echo ptools hard core unlimited >> /etc/security/limits.conf
 RUN groupadd -g $GID ptools
 RUN useradd -r -u $UID -m -g ptools ptools
 WORKDIR /
