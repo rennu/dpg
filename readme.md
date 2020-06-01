@@ -5,47 +5,32 @@ Photogrammetry pipeline using [OpenMVG](https://github.com/openMVG/openMVG) and 
 (Also includes [CMVS](https://github.com/pmoulon/CMVS-PMVS) and [COLMAP](https://github.com/colmap/colmap)).
 
 ## Installation
-Windows:
-1. Install Windows Subsystem for Linux (Ubuntu 16.04)
-2. Clone repository
-3. ```sudo ./build.sh```
 
-Linux (Ubuntu 16.04):
-1. Clone repository
-2. ```sudo ./build.sh```
+### Docker
+You can either use `spedenaave/dpg` image from the docker hub or build it by yourself by first cloning the repository and then using `docker build -t dpg .` command.
 
-Docker:
+Be adviced that the default setting of docker for windows and mac only give the container access to a very limited amount of system resources. You can increase the amount of cpu cores and memory from the advanced settings.
 
-You can either use a prebuilt image or build it by youself. To use the prebuilt image:
+### Linux (or Windows Subsystem for Linux)
+This method will build and install required binaries directly to your linux installation. **It is not recommended!**
+```
+git clone https://github.com/rennu/dpg /tmp/dpg && cd /tmp/dpg
+sudo ./build.sh
+```
 
-```docker run -v $(pwd):/datasets --rm -it spedenaave/dpg```
-
-To build and run the image by yourself:
-
-1. Clone repository
-2. ```docker build -t dpg .```
-3. ```docker run -v $(pwd):/datasets --rm -it dpg```
-
-## Examples
+## Example usage
 
 ### Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
-2. Run pipeline:
 
+In this short example we first clone an example dataset to /tmp/example, then start docker with -v argument to mount /tmp/example to /datasets inside the container, and finally we the run pipeline.
+```
+git clone https://github.com/openMVG/ImageDataset_SceauxCastle /tmp/example
+docker run -v /tmp/example:/datasets --rm -it spedenaave/dpg
+pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs
+```
 
-```pipeline.py --input /datasets/images --output /datasets/output --sfm-type incremental --geomodel f --run-openmvg --run-openmvs```
-
-3. Open your model for example using meshlab. The model is named "scene_mesh_refine_texture.ply" and it's under $datasets/ImageDataset_SceauxCastle/sfm/mvs directory
-
-You should end up with something like this (press ctrl/cmd-k to disable backface culling) ![Example 1](https://i.imgur.com/CpSs2SE.jpg)
-
-### Dense Mesh Reconstruction with Textures by using Incremental Structure from Motion
-1. Download [example image set](https://github.com/openMVG/ImageDataset_SceauxCastle), open it up in terminal and run the docker image (see above)
-2. Run pipeline: 
-
-```pipeline.py --input /datasets/images --output /datasets/output_dense --sfm-type incremental --geomodel f --run-openmvg --run-openmvs --densify```
-
-The end result should look something like this ![Example 2](https://i.imgur.com/lVerEpa.jpg)
+You should now have a reconstructed model at /tmp/example/omvs folder. Use meshlab or something similar to open it. The end result should look something like this:
+![Example 1](https://i.imgur.com/CpSs2SE.jpg)
 
 ## Pipeline Options
 
