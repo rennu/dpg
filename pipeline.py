@@ -233,7 +233,6 @@ def createCommands(args):
         densifyPointCloudOptions += ['--number-views', args.dnviews]
     if args.dreslevel != None:
         densifyPointCloudOptions += ['--resolution-level', args.dreslevel]
-    densifyPointCloudOptions += openmvsOutputFormat
 
     # OpenMVS Reconstruct Mesh
     if args.rcthickness != None:
