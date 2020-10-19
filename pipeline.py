@@ -172,8 +172,13 @@ def createCommands(args):
     commands = []
 
     inputDirectory = args.input
+    if not os.path.isabs(inputDirectory):
+      inputDirectory = os.path.join(os.path.abspath("."), inputDirectory)
+
     global outputDirectory
     outputDirectory = args.output
+    if not os.path.isabs(outputDirectory):
+      outputDirectory = os.path.join(os.path.abspath("."), outputDirectory)
     matchesDirectory = os.path.join(outputDirectory, "matches")
     reconstructionDirectory = os.path.join(outputDirectory, "reconstruction_global")
     global MVSDirectory
