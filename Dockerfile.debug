@@ -121,13 +121,14 @@ RUN apt-get update && apt-get install -y \
   libglew2.1 \
   libcholmod3 \
   libcxsparse3 \
-  python2-minimal
+  python2-minimal \
+  gdb
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2 1
 COPY --from=build /opt /opt
+COPY --from=build /tmp/build /opt/build
 COPY pipeline.py /opt/dpg/pipeline.py
 RUN echo * soft core unlimited >> /etc/security/limits.conf
 RUN echo * hard core unlimited >> /etc/security/limits.conf
-#RUN sysctl -w kernel.core_pattern=/tmp/core-%e-%s-%u-%g-%p-%t
 RUN groupadd -g $GID ptools
 RUN useradd -r -u $UID -m -g ptools ptools
 WORKDIR /
