@@ -47,7 +47,7 @@ WORKDIR /tmp/build
 # Install openmvg
 RUN git clone -b develop --recursive https://github.com/openMVG/openMVG.git openmvg && \
   mkdir openmvg_build && cd openmvg_build && \
-  cmake -DCMAKE_BUILD_TYPE=RELEASE . ../openmvg/src -DCMAKE_INSTALL_PREFIX=/opt/openmvg && \
+  cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO . ../openmvg/src -DCMAKE_INSTALL_PREFIX=/opt/openmvg && \
   make -j4  && \
   make install
 
@@ -72,7 +72,7 @@ RUN git clone https://ceres-solver.googlesource.com/ceres-solver ceres_solver &&
 # Install openmvs
 RUN git clone https://github.com/cdcseacave/openMVS.git openmvs && \
   mkdir openmvs_build && cd openmvs_build && \
-  cmake . ../openmvs -DCMAKE_BUILD_TYPE=Release -DVCG_DIR="../vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs && \
+  cmake . ../openmvs -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -DVCG_DIR="../vcglib" -DCMAKE_INSTALL_PREFIX=/opt/openmvs && \
   make -j4 && \
   make install
 
