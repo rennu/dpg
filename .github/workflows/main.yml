@@ -27,11 +27,22 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      
+      - name: Build image
+        run: docker build -t spedenaave/dpg:latest .
+          
+      - name: Tag image
+        run: docker tag spedenaave/dpg:latest spedenaave/dpg:${{ env.tag }}
+      
+      - name: Push images
+        run: |
+          docker push spedenaave/dpg:${{ env.tag }}
+          docker push spedenaave/dpg:latest
 
-      - name: Build and Publish Docker Image
-        uses: docker/build-push-action@v2.2.0
-        with:
-          tags: |
-            spedenaave/dpg:${{ env.tag }}
-            spedenaave/dpg:latest
-          push: true
+#      - name: Build and Publish Docker Image
+#        uses: docker/build-push-action@v2.2.0
+#        with:
+#          tags: |
+#            spedenaave/dpg:${{ env.tag }}
+#            spedenaave/dpg:latest
+#          push: true
