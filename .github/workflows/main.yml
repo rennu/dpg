@@ -21,8 +21,10 @@ jobs:
 
       - name: Free disk space, lol
         run: |
+          df -h
           sudo rm -rf "/usr/local/share/boost"
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
 
       - name: Docker Setup Buildx
         uses: docker/setup-buildx-action@v1.0.3
