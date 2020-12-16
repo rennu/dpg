@@ -29,15 +29,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       
       - name: Build image
-        run: docker build -t spedenaave/dpg:latest .
+        run: docker build -t spedenaave/dpg:debug . -f Dockerfile.debug
           
-      - name: Tag image
-        run: docker tag spedenaave/dpg:latest spedenaave/dpg:${{ env.tag }}
-      
       - name: Push images
-        run: |
-          docker push spedenaave/dpg:${{ env.tag }}
-          docker push spedenaave/dpg:latest
+        run: docker push spedenaave/dpg:debug
 
 #      - name: Build and Publish Docker Image
 #        uses: docker/build-push-action@v2.2.0
