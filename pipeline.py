@@ -22,7 +22,7 @@ def createParser():
     required.add_argument("--sfm-type",
         type = str,
         help = "Select SfM type: global or incremental",
-        choices = ["global", "incremental"],
+        choices = ["global", "incremental", "incrementalv2"],
         required = True)
 
     pipelines = parser.add_argument_group("Pipelines to run (min. 1 required)")
@@ -162,7 +162,9 @@ def createParser():
 def createCommands(args):
     imageListingOptions = []
     computeFeaturesOptions = []
+    computePairsOptions = []
     computeMatchesOptions = []
+    geometricFilterOptions = []
     incrementalSFMOptions = []
     globalSFMOptions = []
     densifyPointCloudOptions = []
@@ -218,11 +220,13 @@ def createCommands(args):
     if args.upright:
         computeFeaturesOptions += ["-u", "1"]
 
+    # Geometric filter options
+    if args.geomodel != None:
+        geometricFilterOptions += ["-g", args.geomodel]
+
     # OpenMVG Match Matches
     if args.ratio != None:
         computeMatchesOptions += ["-r", args.ratio]
-    if args.geomodel != None:
-        computeMatchesOptions += ["-g", args.geomodel]
     if args.matching != None:
         computeMatchesOptions += ["-n", args.matching]
 
@@ -283,20 +287,36 @@ def createCommands(args):
         })
 
         commands.append({
+          "title": "Compute matching pairs",
+          "command": [os.path.join(openmvgBin, "openMVG_main_PairGenerator"),  "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-o", os.path.join(matchesDirectory, "pairs.bin")]
+        })
+
+        commands.append({
             "title": "Compute matches",
-            "command": [os.path.join(openmvgBin, "openMVG_main_ComputeMatches"),  "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-o", matchesDirectory] + computeMatchesOptions
+            "command": [os.path.join(openmvgBin, "openMVG_main_ComputeMatches"),  "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-p", os.path.join(matchesDirectory, "pairs.bin"), "-o", os.path.join(matchesDirectory, "matches.putative.bin")] + computeMatchesOptions
+        })
+
+        commands.append({
+            "title": "Filter matches",
+            "command": [os.path.join(openmvgBin, "openMVG_main_GeometricFilter"),  "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-m", os.path.join(matchesDirectory, "matches.putative.bin"), "-o", os.path.join(matchesDirectory, "matches.f.bin")] + geometricFilterOptions
         })
 
         # Select pipeline type
         if pipelineType == "global":
             commands.append({
                 "title": "Do Global reconstruction",
-                "command": [os.path.join(openmvgBin, "openMVG_main_GlobalSfM"),  "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-m", matchesDirectory, "-o", reconstructionDirectory] + globalSFMOptions
+                "command": [os.path.join(openmvgBin, "openMVG_main_SfM"),  "-s", "GLOBAL", "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-m", matchesDirectory, "-o", reconstructionDirectory] + globalSFMOptions
             })
         if pipelineType == "incremental":
             commands.append({
                 "title": "Do incremental/sequential reconstruction",
-                "command": [os.path.join(openmvgBin, "openMVG_main_IncrementalSfM"),  "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-m", matchesDirectory, "-o", reconstructionDirectory] + incrementalSFMOptions
+                "command": [os.path.join(openmvgBin, "openMVG_main_SfM"),  "-s", "INCREMENTAL", "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-m", matchesDirectory, "-o", reconstructionDirectory] + incrementalSFMOptions
+            })
+
+        if pipelineType == "incremental2":
+            commands.append({
+                "title": "Do incremental/sequential reconstruction",
+                "command": [os.path.join(openmvgBin, "openMVG_main_SfM"),  "-s", "INCREMENTALV2", "-i", os.path.join(matchesDirectory, "sfm_data.json"), "-m", matchesDirectory, "-o", reconstructionDirectory] + incrementalSFMOptions
             })
 
         if args.colorize:
