@@ -63,7 +63,10 @@ def createParser():
         type = int,
         help = "Camera model: 1. Pinhole 2. Pinhole Radial 1 3. Pinhole Radial 3 (Default) 4. Pinhole Brown 5. Pinhole with a Simple Fish-eye Distortion",
         choices = [1, 2, 3, 4, 5])
-
+    imageListing.add_argument("--intrinsics",
+        type = str,
+        help = "Camera matrix formated as 'f_x;0;u_x;0;f_y;u_y;0;0;1'.")
+    
     computeFeature = parser.add_argument_group("OpenMVG Compute Features")
     computeFeature.add_argument("--descmethod",
         type = str, 
@@ -211,6 +214,8 @@ def createCommands(args):
         imageListingOptions += ["-f", args.flength]
     if args.cmodel != None:
         imageListingOptions += ["-c", args.cmodel]
+    if args.intrinsics != None:
+        imageListingOptions += ["-k", args.intrinsics]
 
     # OpenMVG Compute Features
     if args.descmethod != None:
